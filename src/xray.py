@@ -5,6 +5,8 @@ from keras.applications.vgg16 import VGG16, preprocess_input, decode_predictions
 import glob
 import csv
 import re
+from sklearn.model_selection import KFold
+from sklearn.model_selection import train_test_split
 
 filenames = []
 file_path = '/Users/astyakghanavatian/Desktop/NIHData/images/'
@@ -55,3 +57,25 @@ for i in cleaned_data[:]:
 
 
 print(pd.DataFrame(labels_matrix))
+
+
+"""
+X_train, X_test = train_test_split(cleaned_data, test_size=0.20)
+
+print("TRAIN SPLIT: \n")
+print(pd.DataFrame(X_train))
+
+print("TEST SPLIT: \n")
+print(pd.DataFrame(X_test))
+"""
+
+
+kf = KFold(n_splits=5)
+
+indices = kf.split(cleaned_data)
+
+# --- retrieve train and test splits to run in Neural Network
+for train_index, test_index in indices:
+    print("TRAIN:", train_index, "TEST:", test_index)
+    #X_train, X_test = cleaned_data[train_index], cleaned_data[test_index]
+
