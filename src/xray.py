@@ -1,17 +1,30 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+from keras import Sequential, Model, Input
 from keras.applications.vgg16 import VGG16, preprocess_input, decode_predictions
+from keras import regularizers, optimizers
+from keras.layers import Conv2D, Flatten, Dense, MaxPooling2D, Dropout, Activation
 from keras.preprocessing.image import ImageDataGenerator
 import glob
 import csv
 import re
 from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
+from timeit import default_timer as timer
+
+
+start = timer()
 
 filenames = []
 file_path = '/Users/astyakghanavatian/Desktop/NIHData/images/'
 #file_path2 = '/Users/astyakghanavatian/Desktop/NIHData/images2/'
+
+
+def generator_wrapper(generator):
+    for batch_x,batch_y in generator:
+        yield (batch_x,[batch_y[:,i] for i in range(15)])
+
 
 # --- get file names for images in order to extract features
 for file in glob.glob(file_path + '*.png'):
@@ -67,7 +80,7 @@ new_df = labels_df[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]].rename(
 
 new_df.insert(0, 'FileNames', pd.Series(cd_df[0]), True)
 
-print(new_df)
+#print(new_df)
 
 
 
@@ -87,40 +100,89 @@ train_generator = datagen.flow_from_dataframe(
         directory=file_path,
         x_col='FileNames',
         y_col=disease_labels,
-        #target_size=(256, 256),
+        target_size=(250, 250),
         shuffle=True,
-        batch_size=32,
+        batch_size=50,
         class_mode="multi_output")
         #classes = disease_labels
 
-""""
+
 validation_generator = datagen.flow_from_dataframe(
         dataframe=X_test,
         directory=file_path,
         x_col='FileNames',
         #y_col=None,
-        #target_size=(150, 150),
-        batch_size=32,
+        target_size=(250, 250),
+        batch_size=50,
         class_mode=None)
-"""
+
 
 test_generator=datagen.flow_from_dataframe(
         dataframe=X_test,
         directory=file_path,
         x_col="FileNames",
+        target_size=(250,250),
         batch_size=1,
         shuffle=False,
         class_mode=None)
 
-"""
-model.fit_generator(
-        train_generator,
-        steps_per_epoch=2000,
-        epochs=50,
-        validation_data=validation_generator,
-        validation_steps=800)
-"""
+input = Input(shape = (250,250,3))
+x = Conv2D(32, (3, 3), padding = 'same')(input)
+x = Activation('relu')(x)
+x = Conv2D(32, (3, 3))(x)
+x = Activation('relu')(x)
+x = MaxPooling2D(pool_size = (2, 2))(x)
+x = Dropout(0.25)(x)
+x = Conv2D(64, (3, 3), padding = 'same')(x)
+x = Activation('relu')(x)
+x = Conv2D(64, (3, 3))(x)
+x = Activation('relu')(x)
+x = MaxPooling2D(pool_size = (2, 2))(x)
+x = Dropout(0.25)(x)
+x = Flatten()(x)
+x = Dense(512)(x)
+x = Activation('relu')(x)
+x = Dropout(0.5)(x)
+out0 = Dense(1, activation = 'sigmoid')(x)
+out1 = Dense(1, activation = 'sigmoid')(x)
+out2 = Dense(1, activation = 'sigmoid')(x)
+out3 = Dense(1, activation = 'sigmoid')(x)
+out4 = Dense(1, activation = 'sigmoid')(x)
+out5 = Dense(1, activation = 'sigmoid')(x)
+out6 = Dense(1, activation = 'sigmoid')(x)
+out7 = Dense(1, activation = 'sigmoid')(x)
+out8 = Dense(1, activation = 'sigmoid')(x)
+out9 = Dense(1, activation = 'sigmoid')(x)
+out10 = Dense(1, activation = 'sigmoid')(x)
+out11 = Dense(1, activation = 'sigmoid')(x)
+out12 = Dense(1, activation = 'sigmoid')(x)
+out13 = Dense(1, activation = 'sigmoid')(x)
+out14 = Dense(1, activation = 'sigmoid')(x)
 
+out_list = [out0, out1, out2, out3, out4, out5,
+            out6, out7, out8, out9, out10, out11,
+            out12, out13, out14]
+model = Model(input,out_list)
+
+
+model.compile(optimizers.rmsprop(lr=0.0001, decay=1e-6),loss="binary_crossentropy",metrics=["accuracy"])
+
+print('Fitting model ...\n')
+model.fit_generator(generator=train_generator, steps_per_epoch=20, epochs=1)
+
+
+print('Making predictions ...\n')
+predict = model.predict_generator(test_generator)
+
+print('PREDICTION: \n')
+print("Length of predict element 0: ", len(predict[0]))
+print(pd.DataFrame(predict[0]))
+print("Length of predict list: ", len(predict))
+
+
+
+end = timer()
+print("Total run-time: %.2f seconds" % (end - start))
 
 """
 
@@ -155,4 +217,64 @@ for file in glob.glob(file_path2 + '*.png'):
     img_path = file
     file = file.split("/")
     filenames.append(file[len(file)-1])
+"""
+
+
+"""
+model.fit_generator(
+        train_generator,
+        steps_per_epoch=2000,
+        epochs=50,
+        validation_data=validation_generator,
+        validation_steps=800)
+
+
+
+model = Sequential([
+    Conv2D(32, (3, 3), activation='relu', input_shape=(None, None, 3)),
+    Flatten(),
+    Dense(len(disease_labels), activation='softmax')
+]
+)
+
+
+
+loss_ary = ["categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy"
+            , "categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy",
+            "categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy", 
+            "categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy"]
+"""
+
+
+
+"""
+# Create CNN model
+# Will use a combination of convolutional, max pooling, and dropout layers for this purpose
+model = Model(outputs=disease_labels)
+
+model.add(Conv2D(filters = 8, kernel_size = 3, padding = 'same', activation = 'relu', input_shape = (250, 250, 3)))
+model.add(MaxPooling2D(pool_size = 2))
+model.add(Dropout(0.2))
+
+model.add(Conv2D(filters = 16, kernel_size = 3, padding = 'same', activation = 'relu'))
+model.add(MaxPooling2D(pool_size = 2))
+model.add(Dropout(0.2))
+
+model.add(Conv2D(filters = 32, kernel_size = 3, padding = 'same', activation = 'relu'))
+model.add(MaxPooling2D(pool_size = 2))
+model.add(Dropout(0.2))
+
+model.add(Conv2D(filters = 64, kernel_size = 3, padding = 'same', activation = 'relu'))
+model.add(MaxPooling2D(pool_size = 2))
+model.add(Dropout(0.2))
+
+model.add(Conv2D(filters = 128, kernel_size = 3, padding = 'same', activation = 'relu'))
+model.add(MaxPooling2D(pool_size = 3))
+model.add(Dropout(0.2))
+
+# add in fully connected dense layers to model, then output classifiction probabilities using a softmax activation function
+model.add(Flatten())
+model.add(Dense(500, activation = 'relu'))
+model.add(Dropout(0.2))
+model.add(Dense(len(disease_labels), activation = 'sigmoid'))
 """
