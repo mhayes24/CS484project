@@ -1,0 +1,255 @@
+10 epochs (7,7) Sample size: 175 images IMG Size: (256,256)
+tp:  36
+tn:  404
+fp:  24
+fn:  61
+F1 Score:  0.4585987261146497
+Total run-time: 471.50 seconds
+
+1 epoch (7,7) Sample size: 175 images IMG Size: (256,256)
+tp:  22
+tn:  421
+fp:  33
+fn:  49
+F1 Score:  0.34920634920634924
+Total run-time: 252.39 seconds
+
+
+
+10 epochs (5,5) Sample size: 175 images IMG Size: (256,256)
+tp:  18
+tn:  433
+fp:  30
+fn:  44
+F1 Score:  0.3272727272727273
+Total run-time: 1148.63 seconds
+
+1 epoch (5,5) Sample size: 175 images IMG Size: (256,256)
+tp:  47
+tn:  153
+fp:  1
+fn:  324
+F1 Score:  0.22434367541766106
+Total run-time: 143.89 seconds
+
+
+
+10 epochs (3,3) Sample size: 175 images IMG Size: (256,256)
+tp:  46
+tn:  276
+fp:  6
+fn:  197
+F1 Score:  0.311864406779661
+Total run-time: 855.45 seconds
+
+1 epoch (3,3) Sample size: 175 images IMG Size: (256,256)
+tp:  43
+tn:  183
+fp:  8
+fn:  291
+F1 Score:  0.22337662337662337
+Total run-time: 83.93 seconds
+
+
+
+
+
+
+
+SMALLER IMAGE SIZE
+
+10 epochs (7,7) Sample size: 175 images IMG Size: (100,100)
+tp:  29
+tn:  431
+fp:  26
+fn:  39
+F1 Score:  0.47154471544715443
+Total run-time: 263.66 seconds
+
+1 epoch (7,7) Sample size: 175 images IMG Size: (100,100)
+tp:  31
+tn:  395
+fp:  21
+fn:  78
+F1 Score:  0.38509316770186336
+Total run-time: 37.04 seconds
+
+
+
+10 epochs (5,5) Sample size: 175 images IMG Size: (100,100)
+tp:  35
+tn:  414
+fp:  25
+fn:  51
+F1 Score:  0.4794520547945206
+Total run-time: 177.79 seconds
+
+
+1 epoch (5,5) Sample size: 175 images IMG Size: (100,100)
+tp:  26
+tn:  386
+fp:  23
+fn:  90
+F1 Score:  0.3151515151515152
+Total run-time: 26.30 seconds
+
+
+
+10 epochs (3,3) Sample size: 175 images IMG Size: (100,100)
+tp:  26
+tn:  402
+fp:  18
+fn:  79
+F1 Score:  0.348993288590604
+Total run-time: 99.71 seconds
+
+1 epoch (3,3) Sample size: 175 images IMG Size: (100,100)
+tp:  11
+tn:  431
+fp:  43
+fn:  40
+F1 Score:  0.2095238095238095
+Total run-time: 20.23 seconds
+
+
+
+
+
+
+1 epoch (7,7) Sample size: ALL IMG Size: (100,100)
+
+tp:  1288
+tn:  32023
+fp:  1819
+fn:  1230
+F1 Score:  0.45795555555555556
+Total run-time: 1928.91 seconds
+
+
+1 epoch (5,5) Sample size: ALL IMG Size: (100,100)
+
+tp:  1676
+tn:  30592
+fp:  1388
+fn:  2704
+F1 Score:  0.45029554003224076
+Total run-time: 1514.14 seconds
+
+
+
+
+1 epoch (3,3) Sample size: ALL IMG Size: (100,100)
+
+tp:  1309
+tn:  32023
+fp:  1794
+fn:  1234
+F1 Score:  0.4636911087495572
+Total run-time: 644.33 seconds
+
+
+2 epoch (3,3) Sample size: ALL IMG Size: (100,100)
+
+tp:  1285
+tn:  32083
+fp:  1796
+fn:  1196
+F1 Score:  0.4620640057533261
+Total run-time: 241.45 seconds
+
+
+3 epoch (3,3) Sample size: ALL IMG Size: (100,100)
+tp:  1719
+tn:  30248
+fp:  1346
+fn:  3047
+F1 Score:  0.43902439024390244
+Total run-time: 295.66 seconds
+
+
+4 epoch (3,3) Sample size: ALL IMG Size: (100,100)
+tp:  1461
+tn:  31293
+fp:  1648
+fn:  1958
+F1 Score:  0.4476102941176471
+Total run-time: 354.26 seconds
+
+
+5 epoch (3,3) Sample size: ALL IMG Size: (100,100)
+tp:  1638
+tn:  30553
+fp:  1469
+fn:  2700
+F1 Score:  0.44002686366689053
+Total run-time: 439.09 seconds
+
+
+
+5 epoch (5,5) Sample size: ALL IMG Size: (100,100)
+tp:  1272
+tn:  32074
+fp:  1824
+fn:  1190
+F1 Score:  0.4577186038143217
+Total run-time: 698.81 seconds
+
+4 epoch (5,5) Sample size: ALL IMG Size: (100,100)
+tp:  1654
+tn:  30862
+fp:  1377
+fn:  2467
+F1 Score:  0.46252796420581654
+Total run-time: 655.49 seconds
+
+3 epoch (5,5) Sample size: ALL IMG Size: (100,100)
+tp:  1296
+tn:  32113
+fp:  1787
+fn:  1164
+F1 Score:  0.4676168139996392
+Total run-time: 584.25 seconds
+
+2 epoch (5,5) Sample size: ALL IMG Size: (100,100)
+tp:  1251
+tn:  32068
+fp:  1856
+fn:  1185
+F1 Score:  0.45138011906909614
+Total run-time: 469.37 seconds
+
+1 epoch (5,5) Sample size: ALL IMG Size: (100,100)
+tp:  1305
+tn:  32164
+fp:  1758
+fn:  1133
+F1 Score:  0.4744591892383203
+Total run-time: 264.79 seconds
+
+
+
+
+
+1 epoch (7,7) Sample size: ALL IMG Size: (100,100)
+tp:  1252
+tn:  32051
+fp:  1857
+fn:  1200
+F1 Score:  0.4502787268476892
+Total run-time: 407.47 seconds
+
+2 epoch (7,7) Sample size: ALL IMG Size: (100,100)
+tp:  1307
+tn:  32194
+fp:  1723
+fn:  1136
+F1 Score:  0.4776173944820026
+Total run-time: 561.57 seconds
+
+3 epoch (7,7) Sample size: ALL IMG Size: (100,100)
+tp:  1268
+tn:  32067
+fp:  1811
+fn:  1214
+F1 Score:  0.4560330875741773
+Total run-time: 850.76 seconds
