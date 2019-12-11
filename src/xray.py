@@ -15,7 +15,7 @@ from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
 from timeit import default_timer as timer
 import sys
-np.set_printoptions(threshold=sys.maxsize)
+#np.set_printoptions(threshold=sys.maxsize)
 
 start = timer()
 
@@ -95,16 +95,17 @@ X_train, X_test = train_test_split(new_df, test_size=0.20)
 
 # --- KERAS SEQUENCE FOR BATCH PROCESSING???????????
 datagen = ImageDataGenerator(
+    featurewise_std_normalization=True,
     rescale=1./255)
 
-batches = 4
-
+batches = 50
+target_shape = (100,100)
 train_generator = datagen.flow_from_dataframe(
         dataframe=X_train,
         directory=file_path,
         x_col='FileNames',
         y_col=disease_labels,
-        target_size=(250, 250),
+        target_size=target_shape,
         shuffle=True,
         batch_size=batches,
         class_mode="multi_output")
@@ -116,7 +117,7 @@ validation_generator = datagen.flow_from_dataframe(
         directory=file_path,
         x_col='FileNames',
         #y_col=None,
-        target_size=(250, 250),
+        target_size=target_shape,
         batch_size=batches,
         class_mode=None)
 
@@ -125,26 +126,32 @@ test_generator=datagen.flow_from_dataframe(
         dataframe=X_test,
         directory=file_path,
         x_col="FileNames",
-        target_size=(250,250),
+        target_size=target_shape,
         batch_size=1,
         shuffle=False,
         class_mode=None)
 
-
+kernel = (7,7)
 # --- CNN implementation
-input = Input(shape = (250,250,1))
-x = Conv2D(32, (3, 3), padding = 'same')(input)
+input = Input(shape = (100,100,3))
+x = Conv2D(filters=32, kernel_size=kernel, strides=2, padding = 'same')(input)
 x = Activation('relu')(x)
-x = Conv2D(32, (3, 3))(x)
-x = Activation('relu')(x)
-x = MaxPooling2D(pool_size = (2, 2))(x)
-x = Dropout(0.25)(x)
-x = Conv2D(64, (3, 3), padding = 'same')(x)
-x = Activation('relu')(x)
-x = Conv2D(64, (3, 3))(x)
+x = Conv2D(filters=32, kernel_size=kernel, padding = 'same')(x)
 x = Activation('relu')(x)
 x = MaxPooling2D(pool_size = (2, 2))(x)
-x = Dropout(0.25)(x)
+x = Dropout(0.2)(x)
+x = Conv2D(filters=32, kernel_size=kernel, strides=1, padding = 'same')(input)
+x = Activation('relu')(x)
+x = Conv2D(filters=64, kernel_size=kernel, padding = 'same')(x)
+x = Activation('relu')(x)
+x = MaxPooling2D(pool_size = (2, 2))(x)
+x = Dropout(0.2)(x)
+x = Conv2D(filters=64, kernel_size=kernel, strides=1, padding = 'same')(x)
+x = Activation('relu')(x)
+x = Conv2D(filters=64, kernel_size=kernel, strides=1, padding = 'same')(x)
+x = Activation('relu')(x)
+x = MaxPooling2D(pool_size = (2, 2))(x)
+x = Dropout(0.2)(x)
 x = Flatten()(x)
 x = Dense(512)(x)
 x = Activation('relu')(x)
@@ -170,15 +177,24 @@ out_list = [out0, out1, out2, out3, out4, out5,
             out12, out13, out14]
 model = Model(input,out_list)
 
+loss_functions = ["binary_crossentropy", "binary_crossentropy", "binary_crossentropy", "binary_crossentropy", "binary_crossentropy",
+                  "binary_crossentropy", "binary_crossentropy", "binary_crossentropy", "binary_crossentropy", "binary_crossentropy",
+                  "binary_crossentropy", "binary_crossentropy", "binary_crossentropy", "binary_crossentropy", "binary_crossentropy"]
 
-model.compile(optimizers.rmsprop(lr=0.0001, decay=1e-6),loss="binary_crossentropy",metrics=["accuracy"])
+model.compile(optimizers.rmsprop(lr=0.0001, decay=1e-6),loss="binary_crossentropy", metrics=["binary_accuracy"])
 
+
+train_size = train_generator.n/train_generator.batch_size
+val_size = validation_generator.n/validation_generator.batch_size
+test_size = test_generator.n/test_generator.batch_size
 print('Fitting model ...\n')
-model.fit_generator(generator=train_generator, steps_per_epoch=math.ceil(len(filenames)/batches), epochs=1,
+train_size = 20
+model.fit_generator(generator=train_generator, steps_per_epoch=train_size, epochs=3,
                     use_multiprocessing=True)
 
 print('Making predictions ...\n')
-predict = model.predict_generator(test_generator)
+test_generator.reset()
+predict = model.predict_generator(test_generator, steps=test_size, verbose=1)
 
 print('PREDICTION: \n')
 print("Length of predict element 0: ", len(predict[0]))
@@ -187,7 +203,7 @@ print("Length of predict list: ", len(predict))
 
 test_labels = []
 for i in predict[:]:
-    test_labels.append((i > 0.4).astype(np.int))
+    test_labels.append((i > 0.3).astype(np.int))
 
 
 
@@ -230,106 +246,3 @@ print("F1 Score: ", f1_score)
 end = timer()
 print("Total run-time: %.2f seconds" % (end - start))
 
-
-
-
-
-
-
-
-
-
-"""
-
-.reshape(X_test.shape)
-"""
-#print("TRAIN SPLIT: \n")
-#print(pd.DataFrame(X_train))
-
-#print("TEST SPLIT: \n")
-#print(pd.DataFrame(X_test))
-
-
-"""
-kf = KFold(n_splits=5)
-
-indices = kf.split(cleaned_data)
-print(type(indices))
-
-
-# --- retrieve train and test splits to run in Neural Network
-for train_index, test_index in indices:
-    print("TRAIN:", train_index, "TEST:", test_index)
-    #X_train, X_test = cleaned_data[train_index], cleaned_data[test_index]
-
-train_data = pd.DataFrame()
-"""
-
-
-
-"""
-for file in glob.glob(file_path2 + '*.png'):
-    img_path = file
-    file = file.split("/")
-    filenames.append(file[len(file)-1])
-"""
-
-
-"""
-model.fit_generator(
-        train_generator,
-        steps_per_epoch=2000,
-        epochs=50,
-        validation_data=validation_generator,
-        validation_steps=800)
-
-
-
-model = Sequential([
-    Conv2D(32, (3, 3), activation='relu', input_shape=(None, None, 3)),
-    Flatten(),
-    Dense(len(disease_labels), activation='softmax')
-]
-)
-
-
-
-loss_ary = ["categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy"
-            , "categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy",
-            "categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy", 
-            "categorical_crossentropy", "categorical_crossentropy", "categorical_crossentropy"]
-"""
-
-
-
-"""
-# Create CNN model
-# Will use a combination of convolutional, max pooling, and dropout layers for this purpose
-model = Model(outputs=disease_labels)
-
-model.add(Conv2D(filters = 8, kernel_size = 3, padding = 'same', activation = 'relu', input_shape = (250, 250, 3)))
-model.add(MaxPooling2D(pool_size = 2))
-model.add(Dropout(0.2))
-
-model.add(Conv2D(filters = 16, kernel_size = 3, padding = 'same', activation = 'relu'))
-model.add(MaxPooling2D(pool_size = 2))
-model.add(Dropout(0.2))
-
-model.add(Conv2D(filters = 32, kernel_size = 3, padding = 'same', activation = 'relu'))
-model.add(MaxPooling2D(pool_size = 2))
-model.add(Dropout(0.2))
-
-model.add(Conv2D(filters = 64, kernel_size = 3, padding = 'same', activation = 'relu'))
-model.add(MaxPooling2D(pool_size = 2))
-model.add(Dropout(0.2))
-
-model.add(Conv2D(filters = 128, kernel_size = 3, padding = 'same', activation = 'relu'))
-model.add(MaxPooling2D(pool_size = 3))
-model.add(Dropout(0.2))
-
-# add in fully connected dense layers to model, then output classifiction probabilities using a softmax activation function
-model.add(Flatten())
-model.add(Dense(500, activation = 'relu'))
-model.add(Dropout(0.2))
-model.add(Dense(len(disease_labels), activation = 'sigmoid'))
-"""
