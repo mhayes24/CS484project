@@ -253,3 +253,96 @@ fp:  1811
 fn:  1214
 F1 Score:  0.4560330875741773
 Total run-time: 850.76 seconds
+
+
+--------------------------------
+1 (7,7) all images (50,50)
+tp:  1268
+tn:  32077
+fp:  1854
+fn:  1161
+F1 Score:  0.4568546207890471
+Total run-time: 205.25 seconds
+
+2 (7,7) all images (50,50)
+tp:  1270
+tn:  32099
+fp:  1814
+fn:  1177
+F1 Score:  0.4592297956969806
+Total run-time: 279.88 seconds
+
+
+3 (7,7) all images (50,50)
+tp:  1280
+tn:  32164
+fp:  1765
+fn:  1151
+F1 Score:  0.4674945215485756
+Total run-time: 290.13 seconds
+
+
+4 (7,7) all images
+tp:  1255
+tn:  32127
+fp:  1795
+fn:  1183
+F1 Score:  0.4573615160349854
+Total run-time: 357.16 seconds
+
+
+5 (7,7) all images
+tp:  1352
+tn:  32026
+fp:  1709
+fn:  1273
+F1 Score:  0.4755539922616954
+Total run-time: 462.82 seconds
+
+
+
+
+1 (5,5) all images
+tp:  1642
+tn:  30515
+fp:  1442
+fn:  2761
+F1 Score:  0.4386269533858688
+Total run-time: 180.16 seconds
+
+
+2 (5,5) all images
+tp:  1295
+tn:  32113
+fp:  1800
+fn:  1152
+F1 Score:  0.46734031035727175
+Total run-time: 204.55 seconds
+
+
+3 (5,5) all images
+tp:  1348
+tn:  32058
+fp:  1687
+fn:  1267
+F1 Score:  0.47716814159292037
+Total run-time: 259.92 seconds
+
+
+4 (5,5) all images
+tp:  1277
+tn:  32102
+fp:  1799
+fn:  1182
+F1 Score:  0.46142728093947605
+Total run-time: 295.62 seconds
+
+
+
+5 (5,5) all images
+tp:  1286
+tn:  32138
+fp:  1782
+fn:  1154
+F1 Score:  0.46695715323166304
+Total run-time: 337.32 seconds
